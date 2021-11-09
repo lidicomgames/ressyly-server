@@ -1,8 +1,8 @@
-use actix_web::{get, web, Error, HttpResponse, HttpRequest, Responder};
-use ecies::decrypt;
+use actix_web::{get, web, Error, HttpRequest, HttpResponse, Responder};
 use futures::future::{ready, Ready};
 
 use crate::server_vars::AppState;
+use crate::cryptography::decrypt_to_string;
 
 // ----------
 // Route Server Information and Status
@@ -36,18 +36,14 @@ async fn get_private_key(
     web::Path((user, password)): web::Path<(String, String)>,
     data: web::Data<AppState>,
 ) -> impl Responder {
+    let key_serialize = &data.secret_key.serialize();
+    let text_decrypted = &hex::decode(&password).unwrap();
+
     HttpResponse::Ok().body(format!(
         "user: {}\npassword {}\nmessage {}",
         &user.clone(),
         &password,
-        std::str::from_utf8(
-            &decrypt(
-                &data.secret_key.serialize(),
-                &hex::decode(&password).unwrap()
-            )
-            .unwrap()
-        )
-        .unwrap(),
+        decrypt_to_string(key_serialize, text_decrypted)
     ))
 }
 
