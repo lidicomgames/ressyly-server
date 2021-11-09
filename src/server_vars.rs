@@ -1,6 +1,4 @@
-use ecies::{PublicKey, SecretKey};
-
 pub struct AppState {
-    pub secret_key: SecretKey,
-    pub public_key: PublicKey,
+    pub secret_key: [u8; 32],
+    pub public_key: [u8; 33],
 }

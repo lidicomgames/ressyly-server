@@ -16,8 +16,8 @@ pub async fn main() -> std::io::Result<()> {
     HttpServer::new(move || {
         App::new()
             .data(AppState {
-                secret_key: secret_key.clone(),
-                public_key: public_key.clone(),
+                secret_key,
+                public_key,
             })
             .wrap(Cors::default().allow_any_origin().max_age(3600))
             .service(get_api_routes())
