@@ -24,7 +24,7 @@ impl Responder for InfoServer {
 #[get("/info")]
 async fn info(data: web::Data<AppState>) -> impl Responder {
     InfoServer {
-        public_key: hex::encode(&data.public_key.serialize()),
+        public_key: hex::encode(&data.public_key.serialize_compressed()),
     }
 }
 
